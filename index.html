@@ -4,11 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图片混淆工具</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        .cf-turnstile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #fafafa;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+        }
+        
+        .main-content.hidden {
+            display: none;
         }
 
         body {
@@ -323,8 +343,13 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎨 图片混淆工具</h1>
+    <div id="cf-turnstile-wrapper" class="cf-turnstile-container">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAAIgAte4pjnCU_gD" data-callback="onTurnstileSuccess"></div>
+    </div>
+    
+    <div class="main-content hidden">
+        <div class="container">
+            <h1>🎨 图片混淆工具</h1>
         <p class="description">基于空间填充曲线的新一代图片混淆。混淆算法保持像素的空间相关性，混淆图被压缩仍能保持色彩。仅供技术交流使用。</p>
         <div class="status-bar" id="status-bar"></div>
         
@@ -431,6 +456,12 @@
     </script>
 
     <script>
+        // Cloudflare Turnstile验证成功回调
+        function onTurnstileSuccess(token) {
+            document.getElementById('cf-turnstile-wrapper').style.display = 'none';
+            document.querySelector('.main-content').classList.remove('hidden');
+        }
+
         let images = [];
         const imagesGrid = document.getElementById('images-grid');
         const placeholder = document.getElementById('placeholder');
@@ -691,5 +722,6 @@
         btnDownload.onclick = batchDownload;
         btnClear.onclick = clearAll;
     </script>
+    </div>
 </body>
 </html>
